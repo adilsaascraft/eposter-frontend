@@ -1,122 +1,120 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Mail, MapPin, ShieldCheck } from "lucide-react";
 
 import EposterHeader from "@/components/eposter/EposterHeader";
 import EposterSubmissionForm from "@/components/eposter/EposterSubmissionForm";
 import EposterGuidelines from "@/components/eposter/EposterGuidelines";
 import EposterSuccess from "@/components/eposter/EposterSuccess";
-
 import { submitEposter } from "@/features/eposter/eposter.service";
-
+import { EPOSTER_CONFERENCE } from "@/features/eposter/eposter.constants";
 import type { EposterFormValues } from "@/features/eposter/eposter.types";
 
-const SUCCESS_DISPLAY_DURATION = 10_000;
+const SUCCESS_DISPLAY_DURATION = 30_000;
 
 export default function EposterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successPresenterName, setSuccessPresenterName] = useState<
-    string | null
-  >(null);
+  const [successData, setSuccessData] = useState<{
+    presenterName: string;
+    emailStatus: "PENDING" | "SENT" | "FAILED";
+    whatsappStatus: "PENDING" | "SENT" | "FAILED";
+  } | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Automatically return to the submission form after 10 seconds.
   useEffect(() => {
-    if (!successPresenterName) return;
-
-    const timer = window.setTimeout(() => {
-      setSuccessPresenterName(null);
-    }, SUCCESS_DISPLAY_DURATION);
-
+    if (!successData) return;
+    const timer = window.setTimeout(() => setSuccessData(null), SUCCESS_DISPLAY_DURATION);
     return () => window.clearTimeout(timer);
-  }, [successPresenterName]);
+  }, [successData]);
 
-  // Submit E-Poster
   const handleSubmit = async (values: EposterFormValues) => {
     try {
       setIsSubmitting(true);
       setErrorMessage(null);
-
       const response = await submitEposter(values);
-
       if (response.success) {
-        setSuccessPresenterName(response.data.presenterName);
+        setSuccessData({
+          presenterName: response.data.presenterName,
+          emailStatus: response.data.emailNotification.status,
+          whatsappStatus: response.data.whatsappNotification.status,
+        });
       }
     } catch (error) {
       console.error("EPoster submission error:", error);
-
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong. Please try again."
-      );
+      setErrorMessage(error instanceof Error ? error.message : "Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Start a new submission immediately.
   const handleSubmitNew = () => {
     setErrorMessage(null);
-    setSuccessPresenterName(null);
+    setSuccessData(null);
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 px-3 py-5 sm:px-6 sm:py-8">
-      <div className="mx-auto max-w-5xl space-y-6">
-        {/* Conference Header */}
+    <main className="eposter-page min-h-screen px-3 py-4 sm:px-6 sm:py-8">
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
+        <div className="eposter-page-blob eposter-page-blob-one" />
+        <div className="eposter-page-blob eposter-page-blob-two" />
+      </div>
+
+      <div className="mx-auto max-w-6xl space-y-7 sm:space-y-9">
         <EposterHeader />
 
-        {/* Submission Success or Submission Form */}
-        {successPresenterName ? (
+        {successData ? (
           <EposterSuccess
-            presenterName={successPresenterName}
+            presenterName={successData.presenterName}
+            emailStatus={successData.emailStatus}
+            whatsappStatus={successData.whatsappStatus}
             onSubmitNew={handleSubmitNew}
           />
         ) : (
           <>
-            {/* Important Resources */}
             <EposterGuidelines />
 
-            {/* API Error */}
             {errorMessage && (
-              <div
-                role="alert"
-                className="flex items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-destructive"
-              >
+              <div role="alert" className="flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-rose-800 shadow-sm">
                 <AlertCircle className="mt-0.5 size-5 shrink-0" />
-
                 <div>
-                  <p className="text-sm font-semibold">
-                    Submission Failed
-                  </p>
-
-                  <p className="mt-1 text-sm">
-                    {errorMessage}
-                  </p>
+                  <p className="text-sm font-bold">Submission could not be completed</p>
+                  <p className="mt-1 text-sm leading-6">{errorMessage}</p>
                 </div>
               </div>
             )}
 
-            {/* Submission Form */}
-            <EposterSubmissionForm
-              onSubmit={handleSubmit}
-              isSubmitting={isSubmitting}
-            />
+            <EposterSubmissionForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
           </>
         )}
 
-        {/* Footer */}
-        <footer className="pb-4 pt-2 text-center">
-          <p className="text-xs text-muted-foreground">
-            © 2026 AROICON. All rights reserved.
-          </p>
-
-          <p className="mt-1 text-xs text-muted-foreground">
-            AROICON 2026 · 03–06 December · HICC, Hyderabad
-          </p>
+        <footer className="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-sm">
+          <div className="grid gap-6 bg-gradient-to-r from-[#102f50] via-[#164c70] to-[#0f766e] px-6 py-7 text-white sm:grid-cols-3 sm:px-8">
+            <div>
+              <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-cyan-200">Conference</p>
+              <p className="mt-2 text-lg font-black">{EPOSTER_CONFERENCE.name}</p>
+              <p className="mt-1 text-xs text-blue-100">46th Annual Conference</p>
+            </div>
+            <div className="flex items-start gap-3">
+              <MapPin className="mt-1 size-4 shrink-0 text-cyan-200" />
+              <div>
+                <p className="text-sm font-bold">Venue</p>
+                <p className="mt-1 text-xs leading-5 text-blue-100">{EPOSTER_CONFERENCE.venue}</p>
+                <p className="text-xs text-blue-100">{EPOSTER_CONFERENCE.city}</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <ShieldCheck className="mt-1 size-4 shrink-0 text-cyan-200" />
+              <div>
+                <p className="text-sm font-bold">Submission support</p>
+                <p className="mt-1 text-xs leading-5 text-blue-100">For E-Poster submission assistance, please contact the AROICON 2026 organizing team.</p>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 px-6 py-4 text-center text-[11px] text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:text-left">
+            <p>© 2026 AROICON. All rights reserved.</p>
+            <p className="inline-flex items-center justify-center gap-1.5"><Mail className="size-3.5" /> E-Poster Submission Portal</p>
+          </div>
         </footer>
       </div>
     </main>

@@ -1,4 +1,3 @@
-
 import type { EposterPosterType } from "./eposter.types";
 
 export const EPOSTER_CONFERENCE = {
@@ -25,10 +24,14 @@ export const EPOSTER_FILE_CONFIG = {
 } as const;
 
 export const EPOSTER_TYPES: EposterPosterType[] = [
-  {
-    label: "E-Poster",
-    value: "E-Poster",
-  },
+  { label: "Breast", value: "Breast" },
+  { label: "CNS", value: "CNS" },
+  { label: "Gastrointestinal", value: "Gastrointestinal" },
+  { label: "Genitourinary", value: "Genitourinary" },
+  { label: "Gynaecological", value: "Gynaecological" },
+  { label: "Head and Neck", value: "Head and Neck" },
+  { label: "Lung/Thoracic", value: "Lung/Thoracic" },
+  { label: "Others", value: "Others" },
 ];
 
 export const EPOSTER_FORM_DEFAULT_VALUES = {

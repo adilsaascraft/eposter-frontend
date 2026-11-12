@@ -1,40 +1,43 @@
-
-import { CalendarDays, MapPin } from "lucide-react";
+import { CalendarDays, MapPin, Sparkles } from "lucide-react";
 
 import { EPOSTER_CONFERENCE } from "@/features/eposter/eposter.constants";
 
 export default function EposterHeader() {
   return (
-    <header className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#102f50] via-[#164c70] to-[#087f83] px-5 py-10 text-white shadow-lg sm:px-8 sm:py-14">
-      <div className="pointer-events-none absolute -right-20 -top-24 size-72 rounded-full border-[35px] border-white/5" />
-      <div className="pointer-events-none absolute -bottom-32 -left-20 size-80 rounded-full border-[45px] border-white/5" />
+    <header className="eposter-header relative isolate overflow-hidden rounded-[2rem] text-white shadow-[0_24px_70px_-35px_rgba(15,45,75,0.65)]">
+      <div className="eposter-header-orb eposter-header-orb-one" />
+      <div className="eposter-header-orb eposter-header-orb-two" />
+      <div className="eposter-header-grid" />
 
-      <div className="relative mx-auto max-w-4xl text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-teal-200 sm:text-sm">
+      <div className="relative mx-auto max-w-5xl px-5 py-10 text-center sm:px-10 sm:py-14 lg:py-16">
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.24em] text-cyan-100 backdrop-blur sm:text-xs">
+          <Sparkles className="size-3.5" />
           46th Annual Conference
-        </p>
+        </div>
 
-        <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-5xl">
+        <p className="mt-6 text-xs font-semibold uppercase tracking-[0.38em] text-cyan-100/90">
+          Welcome to the scientific showcase
+        </p>
+        <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-6xl lg:text-7xl">
           {EPOSTER_CONFERENCE.name}
         </h1>
-
-        <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-blue-50/90 sm:text-base">
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-blue-50/90 sm:text-lg">
           E-Poster Submission Portal
         </p>
 
-        <div className="mt-8 flex flex-col items-center justify-center gap-4 text-sm sm:flex-row sm:gap-8">
-          <div className="flex items-center gap-2">
-            <CalendarDays className="size-4 text-teal-200" />
+        <div className="mx-auto mt-8 flex max-w-3xl flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+          <div className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm backdrop-blur sm:w-auto">
+            <CalendarDays className="size-4 shrink-0 text-cyan-200" />
             <span>{EPOSTER_CONFERENCE.dateRange}</span>
           </div>
-
-          <div className="flex items-center gap-2">
-            <MapPin className="size-4 shrink-0 text-teal-200" />
-            <span>{EPOSTER_CONFERENCE.venue}, {EPOSTER_CONFERENCE.city}</span>
+          <div className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm backdrop-blur sm:w-auto">
+            <MapPin className="size-4 shrink-0 text-cyan-200" />
+            <span>{EPOSTER_CONFERENCE.venue}</span>
           </div>
         </div>
-
-        <div className="mx-auto mt-8 h-1 w-20 rounded-full bg-teal-300" />
+        <p className="mt-4 text-xs font-medium tracking-wide text-blue-100/80">
+          {EPOSTER_CONFERENCE.city}
+        </p>
       </div>
     </header>
   );
