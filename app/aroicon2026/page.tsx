@@ -112,16 +112,21 @@ export default function EposterPage() {
             </div>
           </div>
           
-<div className="flex flex-col items-center gap-2 px-6 py-4 text-center text-[11px] text-slate-500">
-  <p>© 2026 AROICON. All rights reserved.</p>
-
-  <p className="inline-flex items-center justify-center gap-1.5">
-    <Mail className="size-3.5" />
-    E-Poster Submission Portal
+<div className="grid grid-cols-1 items-center gap-2 px-6 py-4 text-center text-[11px] text-slate-500 sm:grid-cols-3 sm:px-8">
+  {/* Left */}
+  <p className="text-center sm:text-left">
+    © 2026 AROICON. All rights reserved.
   </p>
 
+  {/* Center */}
   <p className="text-xs font-bold text-slate-600">
     ePoster.in by SaaScraft Studio (India) Pvt. Ltd.
+  </p>
+
+  {/* Right */}
+  <p className="inline-flex items-center justify-center gap-1.5 sm:justify-end">
+    <Mail className="size-3.5" />
+    E-Poster Submission Portal
   </p>
 </div>
 
