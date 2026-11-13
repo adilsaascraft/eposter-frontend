@@ -32,7 +32,7 @@ const submissionOptions = [
     label: "E-Poster Submission",
   },
   {
-    title: "Oral Poster Submission",
+    title: "Oral Paper Presentation",
     subtitle: "Shortlisted Applicant Submission",
     description:
       "Prepare and submit your Oral Presentation for the AROICON 2026 scientific programme.",
