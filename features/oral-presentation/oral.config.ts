@@ -13,7 +13,7 @@ export const ORAL_CONFIG: SubmissionConfig = {
   apiEndpoint: "/api/orals",
   resources: {
     templateUrl: "/oral-template.pptx",
-    scheduleUrl: "",
+    scheduleUrl: "Oral-Presentation-List.pdf",
     guidelinesUrl: "/oral-guideline.pdf",
   },
   categories: [
