@@ -1,4 +1,4 @@
-export default function EposterPageSkeleton() {
+export default function SubmissionPageSkeleton() {
   return (
     <div className="mx-auto w-full max-w-6xl animate-pulse space-y-7">
       <div className="h-64 rounded-[2rem] bg-slate-200 sm:h-72" />

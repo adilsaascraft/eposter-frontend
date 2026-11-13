@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -14,18 +13,21 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import type { SubmissionConfig } from "@/features/submission/submission.types";
 
-interface EposterSuccessProps {
+interface SubmissionSuccessProps {
+  config: SubmissionConfig;
   presenterName: string;
   emailStatus?: "PENDING" | "SENT" | "FAILED";
   onSubmitNew: () => void;
 }
 
-export default function EposterSuccess({
+export default function SubmissionSuccess({
+  config,
   presenterName,
   emailStatus = "PENDING",
   onSubmitNew,
-}: EposterSuccessProps) {
+}: SubmissionSuccessProps) {
   const successRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -71,7 +73,7 @@ export default function EposterSuccess({
         </h2>
 
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-teal-50/95 sm:text-base">
-          Your E-Poster has been successfully submitted for AROICON 2026.
+          Your {config.shortTitle} has been successfully submitted for AROICON 2026.
           We appreciate your contribution to the scientific programme.
         </p>
       </div>
@@ -121,7 +123,7 @@ export default function EposterSuccess({
             className="h-12 w-full rounded-xl bg-teal-700 px-7 font-bold text-white shadow-lg shadow-teal-900/15 hover:bg-teal-800 sm:w-auto"
           >
             <Plus className="mr-2 size-4" />
-            Submit another E-Poster
+            Submit another {config.shortTitle}
             <ArrowRight className="ml-2 size-4" />
           </Button>
 

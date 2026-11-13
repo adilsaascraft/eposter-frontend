@@ -27,17 +27,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import EposterFileUpload from "./EposterFileUpload";
-import {
-  EPOSTER_FORM_DEFAULT_VALUES,
-  EPOSTER_TYPES,
-} from "@/features/eposter/eposter.constants";
-import { eposterSchema } from "@/features/eposter/eposter.schema";
-import type { EposterFormValues } from "@/features/eposter/eposter.types";
+import SubmissionFileUpload from "./SubmissionFileUpload";
+import { SUBMISSION_FORM_DEFAULT_VALUES } from "@/features/submission/submission.constants";
+import { submissionSchema } from "@/features/submission/submission.schema";
+import type { SubmissionConfig, SubmissionFormValues } from "@/features/submission/submission.types";
 import type { DefaultValues } from "react-hook-form";
 
-interface EposterSubmissionFormProps {
-  onSubmit: (values: EposterFormValues) => Promise<void> | void;
+interface SubmissionFormProps {
+  config: SubmissionConfig;
+  onSubmit: (values: SubmissionFormValues) => Promise<void> | void;
   isSubmitting?: boolean;
 }
 
@@ -74,16 +72,17 @@ function FieldError({ message }: { message?: string }) {
   return <p role="alert" className="mt-1.5 text-xs font-semibold text-rose-700">{message}</p>;
 }
 
-export default function EposterSubmissionForm({
+export default function SubmissionForm({
+  config,
   onSubmit,
   isSubmitting = false,
-}: EposterSubmissionFormProps) {
-  const form = useForm<EposterFormValues>({
-    resolver: zodResolver(eposterSchema),
+}: SubmissionFormProps) {
+  const form = useForm<SubmissionFormValues>({
+    resolver: zodResolver(submissionSchema),
     defaultValues: {
-      ...EPOSTER_FORM_DEFAULT_VALUES,
+      ...SUBMISSION_FORM_DEFAULT_VALUES,
       uploadPoster: undefined,
-    } as DefaultValues<EposterFormValues>,
+    } as DefaultValues<SubmissionFormValues>,
     mode: "onChange",
     reValidateMode: "onChange",
   });
@@ -95,7 +94,7 @@ export default function EposterSubmissionForm({
     trigger,
     setError,
     clearErrors,
-    formState: { errors, isValid },
+    formState: { errors },
   } = form;
 
   // Watch values for the live completion indicator and ensure the component
@@ -126,7 +125,7 @@ export default function EposterSubmissionForm({
               <FileText className="size-3.5" />
               Official submission form
             </div>
-            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">Submit Your E-Poster</h2>
+            <h2 className="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">Submit Your {config.shortTitle}</h2>
             <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600">
               Share your research with the AROICON 2026 scientific community. Complete each section below.
             </p>
@@ -152,7 +151,7 @@ export default function EposterSubmissionForm({
           <SectionHeading
             number="01"
             title="Presenter Information"
-            description="Tell us who will be presenting this E-Poster."
+            description={config.formText.informationDescription}
             icon={UserRound}
           />
 
@@ -199,8 +198,8 @@ export default function EposterSubmissionForm({
         <div className="space-y-6 px-5 py-7 sm:px-8 sm:py-9">
           <SectionHeading
             number="02"
-            title="Poster Information"
-            description="Provide your abstract reference and classify your research topic."
+            title={config.formText.contentHeading}
+            description={config.formText.contentDescription}
             icon={FileText}
           />
 
@@ -212,7 +211,7 @@ export default function EposterSubmissionForm({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="posterType" className={labelClassName}>Poster Category <span className="text-rose-600">*</span></Label>
+              <Label htmlFor="posterType" className={labelClassName}>{config.formText.categoryLabel} <span className="text-rose-600">*</span></Label>
               <Controller
                 name="posterType"
                 control={control}
@@ -226,10 +225,10 @@ export default function EposterSubmissionForm({
                     disabled={isSubmitting}
                   >
                     <SelectTrigger id="posterType" className="h-12 w-full rounded-xl border-slate-200 bg-white px-4 text-sm shadow-sm focus:ring-4 focus:ring-teal-500/10" aria-invalid={!!errors.posterType} onBlur={field.onBlur}>
-                      <SelectValue placeholder="Select poster category" />
+                      <SelectValue placeholder={config.formText.categoryPlaceholder} />
                     </SelectTrigger>
                     <SelectContent>
-                      {EPOSTER_TYPES.map((type) => (
+                      {config.categories.map((type) => (
                         <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
                       ))}
                     </SelectContent>
@@ -240,8 +239,8 @@ export default function EposterSubmissionForm({
             </div>
 
             <div className="space-y-2 sm:col-span-2">
-              <Label htmlFor="posterTitle" className={labelClassName}>Poster Title / Topic <span className="text-rose-600">*</span></Label>
-              <Textarea id="posterTitle" placeholder="Enter the complete title of your E-Poster" rows={3} aria-invalid={!!errors.posterTitle} disabled={isSubmitting} className="min-h-32 resize-y rounded-xl border-slate-200 bg-white px-4 py-3 text-sm shadow-sm placeholder:text-slate-400 focus-visible:border-teal-500 focus-visible:ring-4 focus-visible:ring-teal-500/10" {...register("posterTitle")} />
+              <Label htmlFor="posterTitle" className={labelClassName}>{config.formText.titleLabel} <span className="text-rose-600">*</span></Label>
+              <Textarea id="posterTitle" placeholder={config.formText.titlePlaceholder} rows={3} aria-invalid={!!errors.posterTitle} disabled={isSubmitting} className="min-h-32 resize-y rounded-xl border-slate-200 bg-white px-4 py-3 text-sm shadow-sm placeholder:text-slate-400 focus-visible:border-teal-500 focus-visible:ring-4 focus-visible:ring-teal-500/10" {...register("posterTitle")} />
               <FieldError message={errors.posterTitle?.message} />
             </div>
           </div>
@@ -252,16 +251,17 @@ export default function EposterSubmissionForm({
         <div className="space-y-6 px-5 py-7 sm:px-8 sm:py-9">
           <SectionHeading
             number="03"
-            title="Upload Your E-Poster"
-            description="Upload the final one-slide PowerPoint presentation."
+            title={`Upload Your ${config.shortTitle}`}
+            description={config.formText.uploadDescription}
             icon={FileText}
           />
           <Controller
             name="uploadPoster"
             control={control}
             render={({ field }) => (
-              <EposterFileUpload
+              <SubmissionFileUpload
                 value={field.value}
+                submissionTitle={config.shortTitle}
                 onChange={(file) => {
                   field.onChange(file);
                   clearErrors("uploadPoster");
@@ -292,12 +292,12 @@ export default function EposterSubmissionForm({
             {isSubmitting ? (
               <>
                 <LoaderCircle className="mr-2 size-4 animate-spin" />
-                Submitting your E-Poster...
+                {config.formText.submittingLabel}
               </>
             ) : (
               <>
                 <Send className="mr-2 size-4" />
-                Submit E-Poster
+                {config.formText.submitLabel}
                 <ArrowRight className="ml-2 size-4" />
               </>
             )}
