@@ -1,5 +1,4 @@
 "use client";
-
 import { Controller, useForm } from "react-hook-form";
 import type { ElementType } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,6 +31,9 @@ import { SUBMISSION_FORM_DEFAULT_VALUES } from "@/features/submission/submission
 import { submissionSchema } from "@/features/submission/submission.schema";
 import type { SubmissionConfig, SubmissionFormValues } from "@/features/submission/submission.types";
 import type { DefaultValues } from "react-hook-form";
+
+
+
 
 interface SubmissionFormProps {
   config: SubmissionConfig;
@@ -77,15 +79,21 @@ export default function SubmissionForm({
   onSubmit,
   isSubmitting = false,
 }: SubmissionFormProps) {
-  const form = useForm<SubmissionFormValues>({
-    resolver: zodResolver(submissionSchema),
-    defaultValues: {
-      ...SUBMISSION_FORM_DEFAULT_VALUES,
-      uploadPoster: undefined,
-    } as DefaultValues<SubmissionFormValues>,
-    mode: "onChange",
-    reValidateMode: "onChange",
-  });
+
+
+const isFaculty = config.kind === "faculty";
+
+const form = useForm<SubmissionFormValues>({
+  resolver: zodResolver(submissionSchema),
+  defaultValues: {
+    ...SUBMISSION_FORM_DEFAULT_VALUES,
+    abstractNumber: isFaculty ? "Not Available" : "",
+    uploadPoster: undefined,
+  } as DefaultValues<SubmissionFormValues>,
+  mode: "onChange",
+  reValidateMode: "onChange",
+});
+
 
   const {
     register,
@@ -97,21 +105,37 @@ export default function SubmissionForm({
     formState: { errors },
   } = form;
 
+
+  const handleFormSubmit = handleSubmit((values) => {
+  return onSubmit({
+    ...values,
+    abstractNumber: isFaculty
+      ? "Not Available"
+      : values.abstractNumber,
+  });
+});
+
   // Watch values for the live completion indicator and ensure the component
   // responds immediately as users edit fields or select/remove a file.
   const watched = form.watch();
-  const requiredValues = [
-    watched.presenterName,
-    watched.email,
-    watched.mobile,
-    watched.abstractNumber,
-    watched.posterType,
-    watched.posterTitle,
-    watched.uploadPoster,
-  ];
-  const completedCount = requiredValues.filter((value) =>
-    value instanceof File ? value.size > 0 : typeof value === "string" && value.trim().length > 0
-  ).length;
+
+const requiredValues = [
+  watched.presenterName,
+  watched.email,
+  watched.mobile,
+  ...(!isFaculty ? [watched.abstractNumber] : []),
+  watched.posterType,
+  watched.posterTitle,
+  watched.uploadPoster,
+];
+
+const totalRequiredFields = isFaculty ? 6 : 7;
+
+const completedCount = requiredValues.filter((value) =>
+  value instanceof File
+    ? value.size > 0
+    : typeof value === "string" && value.trim().length > 0
+).length;
 
   const inputClassName = "h-12 rounded-xl border-slate-200 bg-white px-4 text-sm shadow-sm transition placeholder:text-slate-400 focus-visible:border-teal-500 focus-visible:ring-4 focus-visible:ring-teal-500/10";
   const labelClassName = "text-xs font-bold uppercase tracking-[0.08em] text-slate-700";
@@ -133,12 +157,16 @@ export default function SubmissionForm({
           <div className="w-full rounded-2xl border border-teal-100 bg-white/80 p-4 shadow-sm sm:w-44">
             <div className="flex items-center justify-between text-xs font-bold text-slate-600">
               <span>Form progress</span>
-              <span className="text-teal-800">{completedCount}/7</span>
+              <span className="text-teal-800">
+  {completedCount}/{totalRequiredFields}
+</span>
             </div>
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-100">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-teal-600 to-cyan-500 transition-all duration-500"
-                style={{ width: `${(completedCount / 7) * 100}%` }}
+                style={{
+  width: `${(completedCount / totalRequiredFields) * 100}%`,
+}}
               />
             </div>
             <p className="mt-2 text-[10px] text-slate-500">Required details completed</p>
@@ -146,7 +174,7 @@ export default function SubmissionForm({
         </div>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-0">
+      <form onSubmit={handleFormSubmit} noValidate className="space-y-0">
         <div className="space-y-6 px-5 py-7 sm:px-8 sm:py-9">
           <SectionHeading
             number="01"
@@ -204,11 +232,24 @@ export default function SubmissionForm({
           />
 
           <div className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="abstractNumber" className={labelClassName}>Abstract Number <span className="text-rose-600">*</span></Label>
-              <Input id="abstractNumber" placeholder="e.g. AROICON-2026-001" aria-invalid={!!errors.abstractNumber} disabled={isSubmitting} className={inputClassName} {...register("abstractNumber")} />
-              <FieldError message={errors.abstractNumber?.message} />
-            </div>
+            {!isFaculty && (
+  <div className="space-y-2">
+    <Label htmlFor="abstractNumber" className={labelClassName}>
+      Abstract Number <span className="text-rose-600">*</span>
+    </Label>
+
+    <Input
+      id="abstractNumber"
+      placeholder="e.g. AROICON-2026-001"
+      aria-invalid={!!errors.abstractNumber}
+      disabled={isSubmitting}
+      className={inputClassName}
+      {...register("abstractNumber")}
+    />
+
+    <FieldError message={errors.abstractNumber?.message} />
+  </div>
+)}
 
             <div className="space-y-2">
               <Label htmlFor="posterType" className={labelClassName}>{config.formText.categoryLabel} <span className="text-rose-600">*</span></Label>
@@ -224,7 +265,7 @@ export default function SubmissionForm({
                     }}
                     disabled={isSubmitting}
                   >
-                    <SelectTrigger id="posterType" className="h-12 w-full rounded-xl border-slate-200 bg-white px-4 text-sm shadow-sm focus:ring-4 focus:ring-teal-500/10" aria-invalid={!!errors.posterType} onBlur={field.onBlur}>
+                    <SelectTrigger id="posterType" className="w-full rounded-xl border-slate-200 bg-white px-4 text-sm shadow-sm focus:ring-4 focus:ring-teal-500/10" aria-invalid={!!errors.posterType} onBlur={field.onBlur}>
                       <SelectValue placeholder={config.formText.categoryPlaceholder} />
                     </SelectTrigger>
                     <SelectContent>
