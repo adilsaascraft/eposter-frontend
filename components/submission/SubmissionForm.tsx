@@ -208,6 +208,8 @@ const completedCount = requiredValues.filter((value) =>
               <FieldError message={errors.mobile?.message} />
             </div>
 
+            {!isFaculty && (
+
             <div className="space-y-2">
               <Label htmlFor="coAuthor" className={labelClassName}>
                 Co-Author(s) <span className="normal-case tracking-normal text-slate-400">(Optional)</span>
@@ -218,6 +220,7 @@ const completedCount = requiredValues.filter((value) =>
               </div>
               <FieldError message={errors.coAuthor?.message} />
             </div>
+            )}
           </div>
         </div>
 
