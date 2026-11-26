@@ -55,7 +55,7 @@ export default function SubmissionPageClient({ config }: { config: SubmissionCon
         <div className="eposter-page-blob eposter-page-blob-one" />
         <div className="eposter-page-blob eposter-page-blob-two" />
       </div>
-      <div className="mx-auto max-w-6xl space-y-7 sm:space-y-9">
+      <div className="w-full space-y-7 sm:space-y-9">
         <SubmissionHeader config={config} />
         {successData ? (
           <SubmissionSuccess config={config} presenterName={successData.presenterName} emailStatus={successData.emailStatus} onSubmitNew={handleSubmitNew} />
@@ -75,7 +75,11 @@ export default function SubmissionPageClient({ config }: { config: SubmissionCon
           </>
         )}
         <footer className="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-sm">
-          <div className="grid gap-6 bg-gradient-to-r from-[#102f50] via-[#164c70] to-[#0f766e] px-6 py-7 text-white sm:grid-cols-3 sm:px-8">
+          <div className="grid gap-6 px-6 py-7 text-white sm:grid-cols-3 sm:px-8"
+          style={{
+    background: "linear-gradient(90deg, #A03792 0%, #6F509D 50%, #0D6FAA 100%)",
+  }}
+>
             <div>
               <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-cyan-200">Conference</p>
               <p className="mt-2 text-lg font-black">{config.conference.name}</p>

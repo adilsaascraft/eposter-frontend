@@ -41,7 +41,7 @@ export interface SubmissionCategory {
 }
 
 export interface SubmissionConfig {
-  kind: "eposter" | "oral";
+  kind: "eposter" | "oral" | "faculty";
   conference: {
     name: string;
     dateRange: string;
