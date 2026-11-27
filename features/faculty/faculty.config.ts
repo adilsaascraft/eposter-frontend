@@ -14,19 +14,13 @@ export const FACULTY_CONFIG: SubmissionConfig = {
   apiEndpoint: "/api/faculty-presentations",
   resources: {
     templateUrl: "/Faculty_Template.pptx",
-    scheduleUrl: "/presentation-schedule.pdf",
+    scheduleUrl: "",
     guidelinesUrl: "/Speaker_Guidelines.pdf",
   },
   categories: [
-    { label: "Breast", value: "Breast" },
-    { label: "CNS", value: "CNS" },
-    { label: "Gastrointestinal", value: "Gastrointestinal" },
-    { label: "Genitourinary", value: "Genitourinary" },
-    { label: "Gynaecological", value: "Gynaecological" },
-    { label: "Head and Neck", value: "Head and Neck" },
-    { label: "Lung/Thoracic", value: "Lung/Thoracic" },
-    { label: "Others", value: "Others" },
-  ],
+  { label: "Keynote", value: "Keynote" },
+  { label: "Oration", value: "Oration" },
+],
   formText: {
     informationDescription:
       "Tell us who will be presenting this Faculty Presentation.",

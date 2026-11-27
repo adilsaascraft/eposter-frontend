@@ -68,7 +68,7 @@ export default function SubmissionGuidelines({ config }: { config: SubmissionCon
                 </a>
               ) : (
                 <span aria-disabled="true" className="mt-4 inline-flex h-10 items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-400">
-                  Resource link to be configured
+                  Currently the resource is not available.
                 </span>
               )}
             </article>
