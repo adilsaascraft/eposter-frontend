@@ -86,10 +86,11 @@ const isFaculty = config.kind === "faculty";
 const form = useForm<SubmissionFormValues>({
   resolver: zodResolver(submissionSchema),
   defaultValues: {
-    ...SUBMISSION_FORM_DEFAULT_VALUES,
-    abstractNumber: isFaculty ? "Not Available" : "",
-    uploadPoster: undefined,
-  } as DefaultValues<SubmissionFormValues>,
+  ...SUBMISSION_FORM_DEFAULT_VALUES,
+  abstractNumber: isFaculty ? "Not Available" : "",
+  posterType: isFaculty ? "Not Available" : "",
+  uploadPoster: undefined,
+} as DefaultValues<SubmissionFormValues>,
   mode: "onChange",
   reValidateMode: "onChange",
 });
@@ -112,6 +113,7 @@ const form = useForm<SubmissionFormValues>({
     abstractNumber: isFaculty
       ? "Not Available"
       : values.abstractNumber,
+      posterType: isFaculty ? "Not Available" : values.posterType,
   });
 });
 
@@ -254,33 +256,48 @@ const completedCount = requiredValues.filter((value) =>
   </div>
 )}
 
-            <div className="space-y-2">
-              <Label htmlFor="posterType" className={labelClassName}>{config.formText.categoryLabel} <span className="text-rose-600">*</span></Label>
-              <Controller
-                name="posterType"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    value={field.value || ""}
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      void trigger("posterType");
-                    }}
-                    disabled={isSubmitting}
-                  >
-                    <SelectTrigger id="posterType" className="w-full rounded-xl border-slate-200 bg-white px-4 text-sm shadow-sm focus:ring-4 focus:ring-teal-500/10" aria-invalid={!!errors.posterType} onBlur={field.onBlur}>
-                      <SelectValue placeholder={config.formText.categoryPlaceholder} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {config.categories.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              <FieldError message={errors.posterType?.message} />
-            </div>
+            {!isFaculty && (
+  <div className="space-y-2">
+    <Label htmlFor="posterType" className={labelClassName}>
+      {config.formText.categoryLabel}{" "}
+      <span className="text-rose-600">*</span>
+    </Label>
+
+    <Controller
+      name="posterType"
+      control={control}
+      render={({ field }) => (
+        <Select
+          value={field.value || ""}
+          onValueChange={(value) => {
+            field.onChange(value);
+            void trigger("posterType");
+          }}
+          disabled={isSubmitting}
+        >
+          <SelectTrigger
+            id="posterType"
+            className="w-full rounded-xl border-slate-200 bg-white px-4 text-sm shadow-sm focus:ring-4 focus:ring-teal-500/10"
+            aria-invalid={!!errors.posterType}
+            onBlur={field.onBlur}
+          >
+            <SelectValue placeholder={config.formText.categoryPlaceholder} />
+          </SelectTrigger>
+
+          <SelectContent>
+            {config.categories.map((type) => (
+              <SelectItem key={type.value} value={type.value}>
+                {type.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
+    />
+
+    <FieldError message={errors.posterType?.message} />
+  </div>
+)}
 
             <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="posterTitle" className={labelClassName}>{config.formText.titleLabel} <span className="text-rose-600">*</span></Label>
