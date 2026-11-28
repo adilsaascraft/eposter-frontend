@@ -13,10 +13,27 @@ export const FACULTY_CONFIG: SubmissionConfig = {
   shortTitle: "Faculty Presentation",
   apiEndpoint: "/api/faculty-presentations",
   resources: {
-    templateUrl: "/Faculty_Template.pptx",
-    scheduleUrl: "",
-    guidelinesUrl: "/Speaker_Guidelines.pdf",
-  },
+  templateUrl: "/Faculty_Template.pptx",
+  scheduleUrl: "",
+  guidelines: [
+    {
+      title: "Chairpersons Guidelines",
+      url: "/Chairpersons-Guidelines.pdf",
+    },
+    {
+      title: "Moderator Guidelines",
+      url: "/Moderator-Guidelines.pdf",
+    },
+    {
+      title: "Panelists Guidelines",
+      url: "/Panelists-Guidelines.pdf",
+    },
+    {
+      title: "Speaker Guidelines",
+      url: "/Speaker-Guidelines.pdf",
+    },
+  ],
+},
   categories: [
   { label: "Keynote", value: "Keynote" },
   { label: "Oration", value: "Oration" },

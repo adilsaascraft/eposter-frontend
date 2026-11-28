@@ -12,10 +12,15 @@ export const EPOSTER_CONFIG: SubmissionConfig = {
   shortTitle: "E-Poster",
   apiEndpoint: "/api/eposters",
   resources: {
-    templateUrl: "/eposter-template.pptx",
-    scheduleUrl: "/presentation-schedule.pdf",
-    guidelinesUrl: "/eposter-guidelines.pdf",
-  },
+  templateUrl: "/eposter-template.pptx",
+  scheduleUrl: "/presentation-schedule.pdf",
+  guidelines: [
+    {
+      title: "E-Poster Guidelines",
+      url: "/eposter-guidelines.pdf",
+    },
+  ],
+},
   categories: [
     { label: "Breast", value: "Breast" },
     { label: "CNS", value: "CNS" },

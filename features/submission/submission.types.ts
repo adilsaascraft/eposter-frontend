@@ -54,7 +54,11 @@ export interface SubmissionConfig {
   resources: {
     templateUrl: string;
     scheduleUrl: string;
-    guidelinesUrl: string;
+    guidelines?: {
+  title: string;
+  url: string;
+}[];
+
   };
   categories: SubmissionCategory[];
   formText: {

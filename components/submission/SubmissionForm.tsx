@@ -131,7 +131,7 @@ const requiredValues = [
   watched.uploadPoster,
 ];
 
-const totalRequiredFields = isFaculty ? 6 : 7;
+const totalRequiredFields = isFaculty ? 5 : 7;
 
 const completedCount = requiredValues.filter((value) =>
   value instanceof File

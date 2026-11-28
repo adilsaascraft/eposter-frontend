@@ -11,11 +11,16 @@ export const ORAL_CONFIG: SubmissionConfig = {
   title: "Oral Presentation",
   shortTitle: "Oral Presentation",
   apiEndpoint: "/api/orals",
-  resources: {
-    templateUrl: "/oral-template.pptx",
-    scheduleUrl: "Oral-Presentation-List.pdf",
-    guidelinesUrl: "/oral-guideline.pdf",
-  },
+ resources: {
+  templateUrl: "/oral-template.pptx",
+  scheduleUrl: "/Oral-Presentation-List.pdf",
+  guidelines: [
+    {
+      title: "Oral Presentation Guidelines",
+      url: "/oral-guideline.pdf",
+    },
+  ],
+},
   categories: [
     { label: "Breast", value: "Breast" },
     { label: "CNS", value: "CNS" },
